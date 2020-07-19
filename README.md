@@ -10,5 +10,5 @@ react-native app开发全家桶
 #### 安装教程
 
 1.  集成MQTT
-    android  添加生命：<service android:name="org.eclipse.paho.android.service.MqttService" />
+    android  添加生命：`<service android:name="org.eclipse.paho.android.service.MqttService" />`
 
