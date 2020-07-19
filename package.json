@@ -1,0 +1,59 @@
+{
+  "name": "react-native-nbbase",
+  "version": "1.4.11-cp7",
+  "description": "typescript+native base+axios封装",
+  "main": "lib/js/index.js",
+  "types": "lib/js/index.d.ts",
+  "files": [
+    "lib/js",
+    "lib/android/src",
+    "lib/android/build.gradle",
+    "lib/ios",
+    "react-native.config.js"
+  ],
+  "scripts": {
+    "start": "npx react-native start",
+    "android": "npx react-native  run-android"
+  },
+  "keywords": [
+    "react-native-nbbase"
+  ],
+  "author": "Llong",
+  "license": "ISC",
+  "dependencies": {
+    "@react-native-community/async-storage": "^1.11.0",
+    "@react-native-community/netinfo": "^5.9.5",
+    "@react-navigation/native": "^5.5.1",
+    "@react-navigation/stack": "^5.5.1",
+    "axios": "^0.19.2",
+    "events": "^3.1.0",
+    "moment": "^2.27.0",
+    "native-base": "^2.13.12",
+    "react": "^16.11.0",
+    "react-native": "^0.62.2",
+    "react-native-amap-geolocation": "^1.1.0",
+    "react-native-gesture-handler": "^1.6.1",
+    "react-native-puti-pay": "^1.4.0",
+    "react-native-reanimated": "^1.9.0",
+    "react-native-sqlite-storage": "^5.0.0",
+    "react-native-svg": "^12.1.0",
+    "react-native-vector-icons": "^6.6.0",
+    "typescript": "^3.9.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.2",
+    "@babel/preset-env": "^7.10.4",
+    "@babel/preset-react": "^7.10.4",
+    "@types/react": "^16.9.43",
+    "@types/react-native": "^0.62.12"
+  },
+  "prettier": {
+    "printWidth": 100
+  },
+  "jest": {
+    "preset": "react-native",
+    "setupFiles": [
+      "./node_modules/react-native-gesture-handler/jestSetup.js"
+    ]
+  }
+}
