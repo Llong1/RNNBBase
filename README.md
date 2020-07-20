@@ -4,8 +4,50 @@
 react-native app开发全家桶
 
 #### 软件架构
-软件架构说明
+使用typescript开发，需要进行必要的typescript配置，可参照如下配置：
 
+tsconfig.json
+
+`
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "experimentalDecorators": true,
+        "esModuleInterop": true,
+        "isolatedModules": true,
+        "jsx": "react",
+        "lib": [
+            "es6"
+        ],
+        "moduleResolution": "node",
+        "noEmit": true,
+        "strict": true,
+        "target": "esnext",
+        "baseUrl": "src",
+        "paths": {
+            "*": [
+                "src/*"
+            ],
+            "@components/*": [
+                "src/components/*"
+            ],
+            "@apis/*": [
+                "src/apis/*"
+            ],
+        }
+    },
+    "exclude": [
+        "node_modules",
+        "babel.config.js",
+        "metro.config.js",
+        "jest.config.js"
+    ]
+}
+`
+
+建议react-native初始化工程使用typescript模版：
+`npx react-native init MyApp --template react-native-template-typescript`
 
 #### 安装教程
 
