@@ -49,6 +49,9 @@ tsconfig.json
 建议react-native初始化工程使用typescript模版：
 `npx react-native init MyApp --template react-native-template-typescript`
 
+推荐使用mobx作为状态管理器：
+`yarn add mobx mobx-react`
+
 #### 安装教程
 
 1、`yarn add react-native-nbbase` 或者 `npm install react-native-nbbase --save`
