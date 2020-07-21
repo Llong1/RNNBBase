@@ -3,7 +3,7 @@ import Constants from "../Constants";
 export const isMobile = (p?: string | null | undefined) => {
     if (!p || p === '') return false;
     if (p.length != 11) return false;
-    const myreg = /^(((13[0-9]{1})|(14[0-9]{1})|(17[0-9]{1})|(15[0-3]{1})|(15[4-9]{1})|(18[0-9]{1})|(199))+\d{8})$/;
+    const myreg = /^(((13[0-9]{1})|(14[0-9]{1})|(17[0-9]{1})|(15[0-3]{1})|(15[4-9]{1})|(18[0-9]{1})|(19[0-9]{1}))+\d{8})$/;
     return myreg.test(p);
 }
 

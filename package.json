@@ -1,6 +1,6 @@
 {
   "name": "react-native-nbbase",
-  "version": "1.4.11-cp11",
+  "version": "1.4.12-cp4",
   "description": "react-native app开发全家桶",
   "main": "lib/js/index.js",
   "types": "lib/js/index.d.ts",
@@ -33,6 +33,7 @@
     "react-native": "^0.62.2",
     "react-native-amap-geolocation": "^1.1.0",
     "react-native-gesture-handler": "^1.6.1",
+    "react-native-image-picker": "^2.3.3",
     "react-native-puti-pay": "^1.4.0",
     "react-native-reanimated": "^1.9.0",
     "react-native-sqlite-storage": "^5.0.0",

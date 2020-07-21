@@ -4,6 +4,7 @@ export { default as NBCTicker } from "./NBCTicker";
 export { default as NBUserLogo } from "./NBUserLogo";
 export { default as NBCompNetworkLis } from "./NBCompNetworkLis";
 export { default as NBCompProvider } from "./NBCompProvider";
+export { default as NBCompUploadPickerImage } from "./NBCompUploadPickerImage";
 export * from "./NBCompMobileLogin";
 export * from "./NBCompTouchText";
 export * from "./LoginMobile";

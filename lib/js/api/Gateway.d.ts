@@ -6,6 +6,7 @@ export interface GatewayConfig {
     gwFetchSms?: string;
     gwInstantUserList?: string;
     gwInstantMsgList?: string;
+    gwUploadImage?: string;
 }
 export declare const nbDefaultGateway: GatewayConfig;
 export declare class NBGateway {

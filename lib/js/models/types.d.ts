@@ -24,3 +24,10 @@ export interface NBConfig {
 }
 export interface NBRootState {
 }
+export interface NBUploadResponse {
+    finalPath?: string;
+    filename?: string;
+    key?: string;
+    hash?: string;
+    fileType?: string;
+}

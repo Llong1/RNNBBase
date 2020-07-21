@@ -7,7 +7,7 @@ import { NBLoginModel, NBRegisterModel } from "../models";
 import { createAxiosClient } from "../network";
 import { NBIconArrowRight, NBIconLock, NBIconPhone, NBIconSafeCode, NBIconUser } from "../styles";
 import { NBUserModel, setNBUserAll, nbUserMemCache } from "../user";
-import { isMobile, showError, showMsg } from "../util";
+import { isMobile, showError, showMsg, nbLog } from "../util";
 import CutDownTimer from "./CutDownTimer";
 import { NBCompTouchText } from "./NBCompTouchText";
 
@@ -98,11 +98,20 @@ export class NBCompMobileLogin extends React.Component<NBCompMobileLoginPros, NB
                 })
             return;
         }
+
+        const params = this.state.bySms ? {
+            phone: this.state.loginParams.phone,
+            code: this.state.loginParams.code
+        } : {
+                phone: this.state.loginParams.phone,
+                password: this.state.loginParams.password
+            };
+        nbLog('用户登录模块', `${this.state.bySms ? '验证码登录 登录参数' : '密码登录 登录参数'}`, params)
         NBGateway.getGateway()
             .then(v => {
                 return createAxiosClient('POST').then(a => a({
-                    url: `${Constants.BaseDomain}${v.gwUserLogin}`,
-                    params: this.state.loginParams
+                    url: `${Constants.BaseDomain}${this.state.bySms ? v.gwUserLogin : '/common/login/password'}`,
+                    params
                 })).then(vv => {
                     return vv.data;
                 })
@@ -210,7 +219,7 @@ export class NBCompMobileLogin extends React.Component<NBCompMobileLoginPros, NB
                 <Text style={{ fontSize: 24 }}>登录</Text>
                 <View style={[styles.inputViewStyle, { marginTop: 20 }]}>
                     <NBIconPhone style={{ marginLeft: 9, marginTop: 9 }} />
-                    <Input style={{ flex: 1, height: 43, lineHeight: 41, margin: 0, padding: 0 }} keyboardType="name-phone-pad" value={this.state.loginParams.phone} placeholder="请输入手机号码" onChangeText={(phone) => {
+                    <Input style={{ flex: 1, height: 43, lineHeight: 41, margin: 0, padding: 0 }} keyboardType="numeric" value={this.state.loginParams.phone} placeholder="请输入手机号码" onChangeText={(phone) => {
                         this.setState({
                             loginParams: {
                                 ...this.state.loginParams,

@@ -10,6 +10,7 @@ export interface GatewayConfig {
     gwFetchSms?: string,
     gwInstantUserList?: string,
     gwInstantMsgList?: string,
+    gwUploadImage?: string,
 }
 
 export const nbDefaultGateway: GatewayConfig = {
@@ -19,7 +20,8 @@ export const nbDefaultGateway: GatewayConfig = {
     gwUserRegister: `/common/register`,
     gwFetchSms: '/common/message/code',
     gwInstantUserList: '/api/communication/user/list',
-    gwInstantMsgList: '/api/communication/history/list'
+    gwInstantMsgList: '/api/communication/history/list',
+    gwUploadImage: '/common/upload/file'
 }
 
 export class NBGateway {
