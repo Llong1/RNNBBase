@@ -35,9 +35,12 @@ export const setNBUserAll = (user: NBUserAll): Promise<boolean> => {
         nbUserMemCache.currentUser = user.user;
         nbUserMemCache.token = user.token;
         NBBaseCxt.nbUser = user;
-        HeaderManager.updateHeaders({
-            token: user.token
-        })
+        return Promise.all([
+            HeaderManager.updateHeaders({
+                token: user.token
+            }),
+            AsyncStorage.multiSet([[userKey, JSON.stringify(user.user)], [tokenKey, user.token || '']])
+        ]).then(() => true)
     }
     return AsyncStorage.multiSet([[userKey, JSON.stringify(user.user)], [tokenKey, user.token || '']]).then(() => true)
 }
@@ -120,7 +123,11 @@ export const getLastUserToken = (): Promise<string | null> => {
 }
 
 export const logoutNBUser = (): Promise<boolean> => {
-    return saveLastNBUserInfo().then(() => {
-        return saveLastNBUserInfo();
-    })
+    return Promise.all([
+        saveLastNBUserInfo(),
+        saveLastUserToken(),
+        HeaderManager.updateHeaders({
+            token: ''
+        })
+    ]).then(() => true)
 }

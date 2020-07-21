@@ -14,6 +14,7 @@ export default class NBCompNetworkLis extends React.Component<NBCompNetworkLisPr
     trigger?: boolean;
 }> {
     _networkSub?: NetInfoSubscription;
+    isInvoking: boolean;
     constructor(props: NBCompNetworkLisProps);
     componentDidMount(): void;
     componentWillUnmount(): void;

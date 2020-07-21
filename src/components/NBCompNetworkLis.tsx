@@ -18,6 +18,7 @@ export default class NBCompNetworkLis extends React.Component<NBCompNetworkLisPr
 
 
     _networkSub?: NetInfoSubscription;
+    isInvoking: boolean = false;
 
     constructor(props: NBCompNetworkLisProps) {
         super(props);
@@ -98,7 +99,12 @@ export default class NBCompNetworkLis extends React.Component<NBCompNetworkLisPr
     _invokeConnected(): Promise<boolean> {
         const onConnected: OnNetworkConnected | undefined = this.props.onNetworkConnected;
         const trigger: boolean = this.props.trigger === undefined ? true : this.props.trigger;
+        const self = this;
         return new Promise((res, rej) => {
+            if (self.isInvoking) {
+                res(false);
+                return;
+            }
             if (!trigger) {
                 res(false);
                 return;
@@ -108,17 +114,26 @@ export default class NBCompNetworkLis extends React.Component<NBCompNetworkLisPr
                 return;
             }
             try {
+                self.isInvoking = true;
                 const ret = onConnected();
                 if (ret === undefined) {
                     res(true);
                     return;
                 }
                 if (ret.then) {
-                    ret.then(res).catch(rej);
+                    ret.then((is) => {
+                        self.isInvoking = false;
+                        res(is);
+                    }).catch(err => {
+                        self.isInvoking = false;
+                        rej(err);
+                    });
                 } else {
+                    self.isInvoking = false;
                     res(false);
                 }
             } catch (error) {
+                self.isInvoking = false;
                 rej(error);
                 return;
             }

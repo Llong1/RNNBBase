@@ -1,2 +1,4 @@
 import { EmitterSubscription } from "react-native";
-export declare const addNBEventListener: (event: "_nb_event_loading", func: (data: any) => void) => EmitterSubscription;
+declare type NBEventNames = "_nb_event_loading" | "_nb_event_loginsuccess";
+export declare const addNBEventListener: (event: NBEventNames, func: (data: any) => void) => EmitterSubscription;
+export {};
