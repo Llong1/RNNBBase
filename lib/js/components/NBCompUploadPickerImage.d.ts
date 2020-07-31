@@ -1,11 +1,8 @@
 import React from "react";
-import { ImagePickerOptions } from "react-native-image-picker";
+import { ImagePickerOptions, ImagePickerResponse } from "react-native-image-picker";
 import { ViewProps, ImageResizeMode } from "react-native";
 import { NBUploadResponse } from "../models";
-export interface NBChooseImageSource {
-    uri: string;
-    type?: string;
-    fileName?: string;
+export interface NBChooseImageSource extends ImagePickerResponse {
 }
 export interface NBUplodaResult {
     success: boolean;

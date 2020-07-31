@@ -1,6 +1,6 @@
 {
   "name": "react-native-nbbase",
-  "version": "1.4.12-cp4",
+  "version": "1.4.12-cp19",
   "description": "react-native app开发全家桶",
   "main": "lib/js/index.js",
   "types": "lib/js/index.d.ts",
@@ -11,6 +11,10 @@
     "lib/ios",
     "react-native.config.js"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Llong1/RNNBBase"
+  },
   "scripts": {
     "start": "npx react-native start",
     "android": "npx react-native  run-android"

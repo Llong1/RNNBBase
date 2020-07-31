@@ -6,10 +6,7 @@ import { nbFileUploda } from "../network";
 import { View, Icon } from "native-base";
 import { NBUploadResponse } from "../models";
 
-export interface NBChooseImageSource {
-    uri: string,
-    type?: string,
-    fileName?: string
+export interface NBChooseImageSource extends ImagePickerResponse {
 }
 
 export interface NBUplodaResult {
@@ -72,7 +69,7 @@ export default class NBCompUploadPickerImage extends React.Component<NBCompUploa
         return nbFileUploda({
             uri: r.uri,
             name: r.fileName,
-            type: r.type
+            type: 'application/octet-stream'
         }, this.onPrecces.bind(this)).then((rr: NBUploadResponse) => {
             this.setState({
                 isUploading: false

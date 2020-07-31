@@ -63,12 +63,20 @@ export const nbFileUploda = (file: NBFileUploadItem, onUploadProgress?: (progres
             f.name = file.uri.substring(file.uri.lastIndexOf('/') + 1);
         }
         formData.append(fieldName === undefined ? 'file' : fieldName, f);
+        nbLog('网络模块', `${Constants.BaseDomain}${c.gwUploadImage}`, f);
         return createAxiosClient('post', {
             timeout: 600000,
             onUploadProgress,
             ...conf
         }, {
             "Content-Type": "multipart/form-data"
-        }).then(a => a.post(`${Constants.BaseDomain}${c.gwUploadImage}`, formData))
+        }).then(a => {
+            nbLog('网络模块', '上传配置', a.defaults);
+            return a({
+                url: `${Constants.BaseDomain}${c.gwUploadImage}`,
+                params: formData,
+                method: 'post'
+            })
+        })
     }).then(nbFilterResponse).then((r: ResponseModel) => r.result)
 }

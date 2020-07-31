@@ -14,3 +14,4 @@ export * from "./NBCompInstantEnter";
 export * from "./NBCompInstantQuickChat";
 export * from "./anamations";
 export * from "./ec";
+export * from "./NBCompPullView";
