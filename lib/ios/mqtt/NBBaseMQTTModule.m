@@ -8,11 +8,15 @@
 
 RCT_EXPORT_MODULE()
 
-RCT_REMAP_METHOD(isConnected, serverUri: NSString 
-    clientId: NSString
+RCT_REMAP_METHOD(isConnected, serverUri: (NSString *)  serverUri
+    clientId: (NSString *)  clientId
     resolvePromise: (RCTPromiseResolveBlock) resolve
     rejectPromise: (RCTPromiseRejectBlock) reject ) {
 
+}
+
+- (NSArray<NSString *> *)supportedEvents {
+    return @[];
 }
 
 @end
