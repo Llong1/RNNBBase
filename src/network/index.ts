@@ -8,10 +8,12 @@ import { NBUploadResponse } from "../models";
 
 export * from "./HeaderManager";
 export * from "./types";
+export * from "./JsonApi";
 
 export const createAxiosClient = (method: Method = 'GET', config?: AxiosRequestConfig, headers?: HeaderOptions): Promise<AxiosInstance> => {
     return HeaderManager.getHeaders().then(h => {
         const conf: AxiosRequestConfig = {
+            baseURL: Constants.BaseDomain,
             method, headers: h ? {
                 ...h,
                 ...headers
@@ -55,7 +57,7 @@ export const nbFilterResponse = (r: AxiosResponse, filterError?: boolean): Promi
     }
 }
 
-export const nbFileUploda = (file: NBFileUploadItem, onUploadProgress?: (progressEvent: { loaded: number, total: number }) => void, fieldName?: string, conf?: AxiosRequestConfig): Promise<NBUploadResponse> => {
+export const nbFileUpload = (file: NBFileUploadItem, onUploadProgress?: (progressEvent: { loaded: number, total: number }) => void, fieldName?: string, conf?: AxiosRequestConfig): Promise<NBUploadResponse> => {
     return NBGateway.getGateway().then(c => {
         let formData = new FormData();
         const f: NBFileUploadItem = Object.assign({ type: 'application/octet-stream' }, file);
@@ -63,7 +65,6 @@ export const nbFileUploda = (file: NBFileUploadItem, onUploadProgress?: (progres
             f.name = file.uri.substring(file.uri.lastIndexOf('/') + 1);
         }
         formData.append(fieldName === undefined ? 'file' : fieldName, f);
-        nbLog('网络模块', `${Constants.BaseDomain}${c.gwUploadImage}`, f);
         return createAxiosClient('post', {
             timeout: 600000,
             onUploadProgress,
@@ -71,11 +72,8 @@ export const nbFileUploda = (file: NBFileUploadItem, onUploadProgress?: (progres
         }, {
             "Content-Type": "multipart/form-data"
         }).then(a => {
-            nbLog('网络模块', '上传配置', a.defaults);
             return a({
-                url: `${Constants.BaseDomain}${c.gwUploadImage}`,
-                params: formData,
-                method: 'post'
+                url: c.gwUploadImage, data: formData
             })
         })
     }).then(nbFilterResponse).then((r: ResponseModel) => r.result)

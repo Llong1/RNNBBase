@@ -1,10 +1,10 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { NBUserModel, NBUserID, NBUserAll } from "./types";
-import { createAxiosClient, HeaderManager } from '../network';
+import { createAxiosClient, HeaderManager, createNBNetworkApi, callApi } from '../network';
 import Constants from '../Constants';
 import { nbSQLiteCache } from '../cache';
 import { ResponseModel, StatusCode, NBGateway } from "../api";
-import { isEmptyObj } from '../util';
+import { isEmptyObj, showError, nbLog } from '../util';
 import NBBaseCxt from '../NBBaseCxt';
 
 const tokenKey = "_nbuser_app_token";
@@ -49,12 +49,63 @@ export const getLastNBUserALL = (): Promise<NBUserAll | null> => {
     return getLastNBUserInfo().then(u => {
         if (u) {
             return getLastUserToken().then(token => {
-                return {
-                    user: u,
-                    token
+                if (token !== undefined && token.length > 0) {
+                    return HeaderManager.updateHeaders({
+                        token
+                    }).then(() => {
+                        return {
+                            user: u,
+                            token
+                        }
+                    })
                 }
+
+                return null
             })
         }
+        return null;
+    }).then(u => {
+        if (u !== null && u.token) {
+            return callApi<NBUserModel>('/api/user/info/detail').then(uu => {
+                if (uu) {
+                    return setNBUserAll({
+                        user: uu,
+                        token: u.token
+                    }).then(is => {
+                        nbLog('用户模块', '口令换取档案成功：', uu, u)
+                        return {
+                            token: u.token,
+                            user: {
+                                ...u.user,
+                                ...uu
+                            }
+                        }
+                    }).catch(err => {
+                        nbLog('用户模块', '重置本地缓存失败：', err);
+                        return {
+                            token: u.token,
+                            user: {
+                                ...u.user,
+                                ...uu
+                            }
+                        }
+                    })
+                } else {
+                    return saveLastNBUserInfo().then(() => saveLastUserToken()).then(is => {
+                        return null;
+                    }).catch(err => {
+                        nbLog('用户模块', '重置本地缓存失败：', err);
+                        return null;
+                    })
+                }
+            }).catch(err => {
+                showError('获取用户信息失败：' + (typeof err === 'string' ? err : (err.message ? err.message : JSON.stringify(err))));
+                return u;
+            })
+        }
+        return u;
+    }).catch(err => {
+        nbLog('用户模块', '获取本地用户信息失败', err)
         return null;
     })
 }

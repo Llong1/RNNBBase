@@ -2,7 +2,7 @@ import React from "react";
 import { ImagePickerOptions, ImagePickerResponse } from "react-native-image-picker";
 import { ViewProps, ImageResizeMode } from "react-native";
 import { NBUploadResponse } from "../models";
-export interface NBChooseImageSource extends ImagePickerResponse {
+export interface NBChooseImageSource extends ImagePickerResponse, NBUploadResponse {
 }
 export interface NBUplodaResult {
     success: boolean;
@@ -30,13 +30,10 @@ export default class NBCompUploadPickerImage extends React.Component<NBCompUploa
     isUploading?: boolean;
     percent?: number;
     imageSource?: NBChooseImageSource;
+    uploadError?: any;
 }> {
-    state: {
-        isUploading: boolean;
-        percent: number;
-        imageSource: any;
-    };
+    constructor(props: NBCompUploadPickerImageProps);
     private onPrecces;
-    uploadFile(): Promise<NBUplodaResult>;
+    uploadFile(imageSource?: NBChooseImageSource): Promise<NBUplodaResult>;
     render(): JSX.Element;
 }

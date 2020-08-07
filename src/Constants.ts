@@ -23,12 +23,13 @@ export default class Constants {
     }
 
     public static setConf(cof: NBConfig): Promise<void> {
+        if (cof.baseDomain !== undefined) {
+            Constants.BaseDomain = cof.baseDomain;
+        }
         return new Promise((res, rej) => {
             const conf: NBConfig = Object.assign(Constants.config, cof);
             nbLog('NB库常量设置', conf);
             AsyncStorage.setItem(nbConfigKey, JSON.stringify(conf)).then(() => {
-
-                Constants.BaseDomain = conf.baseDomain;
                 if (conf.isDebug !== undefined) {
                     Constants.isDebug = conf.isDebug;
                 }

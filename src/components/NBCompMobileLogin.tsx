@@ -117,11 +117,15 @@ export class NBCompMobileLogin extends React.Component<NBCompMobileLoginPros, NB
                 })
             }).then((v: ResponseModel) => {
                 if (v.status.code === StatusCode.SUCCESS) {
-                    if (onLoginSuccess) {
-                        onLoginSuccess(v.result);
-                    }
                     nbUserMemCache.currentUser = v.result.user;
-                    return setNBUserAll(v.result);
+                    nbLog('用户登录模块', v.result);
+                    return setNBUserAll(v.result).then(is => {
+                        if (onLoginSuccess) {
+                            onLoginSuccess(v.result);
+                        }
+
+                        return is;
+                    });
                 } else {
                     onLoginFail && onLoginFail(v.status);
                     if (show) {
