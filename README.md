@@ -52,6 +52,15 @@ tsconfig.json
 推荐使用mobx作为状态管理器：
 `yarn add mobx mobx-react`
 
+### 集成模块说明：
+
+1、用户档案（注册、登录）
+2、网络模块
+3、图片模块
+4、即时通讯模块
+5、缓存模块
+
+
 #### 安装教程
 
 1、`yarn add react-native-nbbase` 或者 `npm install react-native-nbbase --save`
