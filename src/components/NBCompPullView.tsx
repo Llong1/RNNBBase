@@ -70,7 +70,7 @@ export class NBCompPullView extends React.Component<NBCompPullViewPros, { handle
         Animated.timing(this._rheight, {
             toValue: 0,
             duration: this._currentTransY * 200 / 60,
-            easing: Easing.bounce,
+            easing: Easing.ease,
             useNativeDriver: false
         }).start(() => {
             if (this._currentTransY >= th) {
@@ -88,7 +88,7 @@ export class NBCompPullView extends React.Component<NBCompPullViewPros, { handle
             this.setState({
                 handlerScroll: true
             }, () => {
-                
+
             })
             return;
         }
