@@ -1,6 +1,7 @@
 import { Method } from "axios";
 import React from "react";
-import { Animated, ListRenderItem, ViewProps } from "react-native";
+import { Animated, ListRenderItem, StyleProp, ViewProps, ViewStyle } from "react-native";
+declare type ChangeDataFunc<T> = (data: Array<T>) => Array<T>;
 export interface NBCompFlatListProps<T> extends ViewProps {
     api?: string;
     params?: any;
@@ -15,6 +16,7 @@ export interface NBCompFlatListProps<T> extends ViewProps {
     autoRefresh?: boolean;
     refreshTextBackgroundColor?: string;
     onEndReachedThreshold?: number;
+    flatListProps?: StyleProp<ViewStyle>;
 }
 export declare class NBCompFlatList<T = any> extends React.Component<NBCompFlatListProps<T>, {
     data: Array<T>;
@@ -31,9 +33,10 @@ export declare class NBCompFlatList<T = any> extends React.Component<NBCompFlatL
     _bHeight: Animated.Value;
     constructor(props: NBCompFlatListProps<T>);
     componentDidMount(): void;
-    fetchData(fetchParams?: any, page?: number, size?: number): Promise<unknown>;
+    fetchData(fetchParams?: any, page?: number, size?: number, clear?: boolean): Promise<unknown>;
     UNSAFE_componentWillReceiveProps(props: NBCompFlatListProps<T>): void;
     appendData(d: Array<T>, refresh?: boolean): Promise<boolean>;
+    changeDataList(func: ChangeDataFunc<T>): Promise<unknown>;
     scrollToEnd(params?: {
         animated?: boolean | null;
     }): void;
@@ -41,3 +44,4 @@ export declare class NBCompFlatList<T = any> extends React.Component<NBCompFlatL
     private onRefreshFinish;
     render(): JSX.Element;
 }
+export {};

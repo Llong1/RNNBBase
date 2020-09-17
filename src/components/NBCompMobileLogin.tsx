@@ -280,7 +280,7 @@ export class NBCompMobileLogin extends React.Component<NBCompMobileLoginPros, NB
                                         password
                                     }
                                 })
-                            }} placeholder="请设置您的密码" />
+                            }} placeholder="请输入您的密码" />
                         </View>
                 }
                 <View style={{ marginTop: 20, flexDirection: 'row', paddingBottom: 20 }}>

@@ -1,6 +1,7 @@
 import Axios, { Method } from "axios";
 import Constants from "../Constants";
 import { DataModel } from "../models";
+import NBBaseCxt from "../NBBaseCxt";
 
 interface HeaderPros {
     'Content-Type'?: string,
@@ -55,11 +56,7 @@ export declare class CacheStorage<D> {
     read(req: RequestParams): Promise<D>;
 }
 
-export const makeRequest = (api: string, params: any = {}, method: Method = 'GET', headers: any = {}) => {
-
-}
-
-export const postUploadFile = (api: string, files: any, headers: any = { 'Content-Type': 'multipart/form-data' }) => {
+const _uploadFile = (api: string, files: any, headers: any = { 'Content-Type': 'multipart/form-data' }) => {
     let forms = new FormData();
     for (let name in files) {
         forms.append(name, files[name]);
@@ -79,4 +76,38 @@ export const postUploadFile = (api: string, files: any, headers: any = { 'Conten
         headers: hds,
         timeout: 600000
     }).then(v => v.data);
+}
+
+export const postUploadFile = (api: string, files: any, headers: any = { 'Content-Type': 'multipart/form-data' }, retryLimit: number = 4) => {
+    NBBaseCxt.showLoading(true);
+    if (retryLimit !== undefined && retryLimit <= 0) {
+        return _uploadFile(api, files, headers).then(v => {
+            NBBaseCxt.showLoading(false);
+            return v;
+        }).catch(err => {
+            NBBaseCxt.showLoading(false);
+            return Promise.reject(err);
+        });
+    }
+    let tryTimes: number = retryLimit === undefined ? 4 : retryLimit;
+    return new Promise((res, rej) => {
+        let num: number = 0;
+        let uploadCatcher = (err: any) => {
+            num++;
+            if (num > tryTimes) {
+                NBBaseCxt.showLoading(false);
+                rej(err);
+                return;
+            } else {
+                _uploadFile(api, files, headers).then(v => {
+                    NBBaseCxt.showLoading(false);
+                    res(v);
+                }).catch(uploadCatcher)
+            }
+        }
+        _uploadFile(api, files, headers).then(v => {
+            NBBaseCxt.showLoading(false);
+            res(v);
+        }).catch(uploadCatcher)
+    })
 }

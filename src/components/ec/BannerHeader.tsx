@@ -50,7 +50,7 @@ export default class BannerHeader extends React.Component<BannerHeaderProps> {
                 </View>
                 <View>
                     <View style={{ flex: 1 }} />
-                    <Text style={{ lineHeight: 16, color: 'white', marginLeft: 5, marginRight: 5 }}>看看以下好货</Text>
+                    <Text style={{ lineHeight: 20, color: 'white', marginLeft: 5, marginRight: 5 }}>看看以下好货</Text>
                     <View style={{ flex: 1 }} />
                 </View>
                 <View style={{ marginBottom: 18 }}>

@@ -1,9 +1,11 @@
 import { Method } from "axios";
 import { View, Text } from "native-base";
 import React from "react";
-import { Animated, Easing, FlatList, ListRenderItem, ViewProps } from "react-native";
+import { Animated, Easing, FlatList, ListRenderItem, StyleProp, ViewProps, ViewStyle } from "react-native";
 import { callApi } from "../network";
 import { nbLog } from "../util";
+
+type ChangeDataFunc<T> = (data: Array<T>) => Array<T>;
 
 export interface NBCompFlatListProps<T> extends ViewProps {
     api?: string,
@@ -18,7 +20,8 @@ export interface NBCompFlatListProps<T> extends ViewProps {
     horizontal?: boolean | null,
     autoRefresh?: boolean,
     refreshTextBackgroundColor?: string,
-    onEndReachedThreshold?: number
+    onEndReachedThreshold?: number,
+    flatListProps?: StyleProp<ViewStyle>
 }
 
 export class NBCompFlatList<T = any> extends React.Component<NBCompFlatListProps<T>, {
@@ -51,12 +54,12 @@ export class NBCompFlatList<T = any> extends React.Component<NBCompFlatListProps
         }
     }
 
-    fetchData(fetchParams?: any, page?: number, size?: number) {
+    fetchData(fetchParams?: any, page?: number, size?: number, clear?: boolean) {
         if (!this.props.api) {
             nbLog('下拉刷新列表组件', '请设置api属性！');
             return;
         }
-        const params = {
+        const params = clear !== undefined && clear ? fetchParams : {
             ...this.props.params,
             ...this.fetchParams,
             ...fetchParams
@@ -69,7 +72,8 @@ export class NBCompFlatList<T = any> extends React.Component<NBCompFlatListProps
         this.size = params[pns];
         this.fetchParams = params;
         nbLog('下拉刷新列表组件', '下拉刷新参数：', this.props.api, params);
-        return this.onRefreshStart(this.page > 1).then(() => {
+        return this.onRefreshStart(this.page > 1).then((is: boolean) => {
+            if(!is) return Promise.resolve(true);
             return callApi<{
                 data: Array<T>,
                 total: number
@@ -119,6 +123,21 @@ export class NBCompFlatList<T = any> extends React.Component<NBCompFlatListProps
         }
     }
 
+    public changeDataList(func: ChangeDataFunc<T>) {
+        return new Promise((res, rej) => {
+            try {
+                const data: Array<T> = func(this.state.data);
+                this.setState({
+                    data
+                }, () => {
+                    res(data);
+                })
+            } catch (error) {
+                rej(error);
+            }
+        })
+    }
+
     scrollToEnd(params?: { animated?: boolean | null }) {
         this.flatList!.scrollToEnd(params);
     }
@@ -126,6 +145,12 @@ export class NBCompFlatList<T = any> extends React.Component<NBCompFlatListProps
     private onRefreshStart(isLoadMore?: boolean) {
         return new Promise((res, rej) => {
             if (isLoadMore !== undefined && isLoadMore) {
+                if(this.state.data) {
+                    if(this.total > 0 && this.state.data.length >= this.total) {
+                        res(false);
+                        return;
+                    }
+                }
                 Animated.timing(this._bHeight, {
                     toValue: 60,
                     duration: 400,
@@ -205,12 +230,13 @@ export class NBCompFlatList<T = any> extends React.Component<NBCompFlatListProps
                 ListHeaderComponent={this.props.ListHeaderComponent}
                 horizontal={this.props.horizontal === undefined ? false : this.props.horizontal}
                 onEndReached={(info: { distanceFromEnd: number }) => {
-                    if (this.state.data.length < this.total && this.total > 0) {
+                    if (this.state.data.length < this.total && this.total > 0 && this.state.data.length >= this.size) {
                         this.page = this.page === undefined || this.page === NaN ? 1 : this.page;
                         this.fetchData(this.fetchParams, this.page + 1);
                     }
                 }}
-                onEndReachedThreshold={this.props.onEndReachedThreshold === undefined ? this.props.onEndReachedThreshold : 1} />
+                onEndReachedThreshold={this.props.onEndReachedThreshold === undefined ? this.props.onEndReachedThreshold : 1}
+                style={[{ flex: 1 }, this.props.flatListProps]} />
             <Animated.View style={{ height: this._bHeight, overflow: 'hidden' }}>
                 <View style={{ height: 60, alignItems: 'center', backgroundColor: this.props.refreshTextBackgroundColor || 'rgba(196, 225, 242, 1)' }}>
                     <View style={{ flex: 1 }} />

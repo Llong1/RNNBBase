@@ -1,4 +1,3 @@
-import { Method } from "axios";
 import { DataModel } from "../models";
 interface HeaderPros {
     'Content-Type'?: string;
@@ -41,6 +40,5 @@ export declare class CacheStorage<D> {
     save(req: RequestParams, data?: D | null): Promise<D>;
     read(req: RequestParams): Promise<D>;
 }
-export declare const makeRequest: (api: string, params?: any, method?: Method, headers?: any) => void;
-export declare const postUploadFile: (api: string, files: any, headers?: any) => Promise<any>;
+export declare const postUploadFile: (api: string, files: any, headers?: any, retryLimit?: number) => Promise<any>;
 export {};
