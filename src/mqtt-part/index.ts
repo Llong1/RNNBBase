@@ -149,7 +149,7 @@ export class InstantMqttClient {
         const params = {
             toUserId: toUserId,
             msgType: 'chat',
-            msgContentType: entity.mstType || 'text',
+            msgContentType: entity.msgType || 'text',
             message: JSON.stringify(msg)
         };
         return NBGateway.getGateway().then(v => {
@@ -182,7 +182,7 @@ export class InstantMqttClient {
             }
 
             Toast.show({
-                text: m.msg.mstType === 'text' ? `${m.userName ? m.userName + ':' : ''}${m.msg.content}` : '未知消息类型',
+                text: m.msg.msgType === 'text' ? `${m.userName ? m.userName + ':' : ''}${m.msg.content}` : '未知消息类型',
                 buttonText: '去查看',
                 buttonTextStyle: { color: "#FFF" },
                 buttonStyle: { backgroundColor: "#FB6D3A" },

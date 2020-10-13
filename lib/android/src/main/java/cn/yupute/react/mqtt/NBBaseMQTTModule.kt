@@ -202,6 +202,7 @@ class NBBaseMQTTModule(private val reactContext: ReactApplicationContext) : Reac
         var uri = serverUri
         var cid = clientId
         var opt = options
+        var retryTimes = 0;
         var m: NBBaseMQTTModule = module
         override fun onSuccess(token: IMqttToken) {
             m.sendJsMsg(uri, cid, "connectSuccess", token.toString());
@@ -209,7 +210,7 @@ class NBBaseMQTTModule(private val reactContext: ReactApplicationContext) : Reac
 
         override fun onFailure(token: IMqttToken, e: Throwable) {
             e.printStackTrace();
-            m.connectServer(uri, cid, opt, null);
+            m.sendJsMsg(uri, cid, "connectFail", e.message as String);
         }
     }
 }

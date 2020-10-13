@@ -11,16 +11,27 @@ import { showError } from "../util";
  */
 export const createNBNetworkApi = (method?: Method, cHeaders?: any, c?: AxiosRequestConfig): Promise<AxiosInstance> => {
     return HeaderManager.getHeaders().then((h: any) => {
-        const headers = { ...h, ...cHeaders };
         const conf: AxiosRequestConfig = {
             baseURL: Constants.BaseDomain,
-            method: method || 'GET',
-            transformResponse: (data: any): any => {
-                return data
-            },
-            headers,
-            ...c
+            method: method || 'GET', headers: h ? {
+                ...h,
+                ...cHeaders
+            } : {
+                    ...cHeaders
+                }
         };
+        if (c) {
+            if (c.headers) {
+                conf.headers = {
+                    ...conf.headers,
+                    ...c.headers
+                }
+            }
+            for (let name in c) {
+                if (name === 'heders') continue;
+                conf[name] = c[name];
+            }
+        }
 
         console.log('网络', '创建网络配置', conf);
         return Axios.create(conf);
@@ -62,14 +73,7 @@ export function callApi<T>(api: string, method?: Method, params?: any, headers?:
     console.log('接口调用', '访问api', api, method, params);
     return createNBNetworkApi(method, headers).then((a) => {
         if (method) {
-            switch (method) {
-                case 'post':
-                    return a.post(api, params);
-                case 'POST':
-                    return a.post(api, params);
-                default:
-                    return a({ url: api, params })
-            }
+            return a({ url: api, method, params })
         } else {
             return a.get(appendGetUrl(api, params));
         }

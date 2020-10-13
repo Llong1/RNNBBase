@@ -1,10 +1,10 @@
 import { Input, Text, View } from "native-base";
 import React from "react";
-import { StyleSheet, TouchableOpacity, ViewProps } from "react-native";
+import { StyleSheet, TouchableOpacity, ViewProps, Platform } from "react-native";
 import Constants from "../Constants";
 import { NBGateway, ResponseModel, StatusCode } from "../api";
 import { NBLoginModel, NBRegisterModel } from "../models";
-import { createAxiosClient } from "../network";
+import { createNBNetworkApi } from "../network";
 import { NBIconArrowRight, NBIconLock, NBIconPhone, NBIconSafeCode, NBIconUser } from "../styles";
 import { NBUserModel, setNBUserAll, nbUserMemCache } from "../user";
 import { isMobile, showError, showMsg, nbLog } from "../util";
@@ -64,7 +64,7 @@ export class NBCompMobileLogin extends React.Component<NBCompMobileLoginPros, NB
 
     public fetchSMS(phone: string) {
         return NBGateway.getGateway().then(v => {
-            return createAxiosClient('GET').then(a => a({
+            return createNBNetworkApi('GET').then(a => a({
                 url: `${Constants.BaseDomain}${v.gwFetchSms}?phone=${phone}`,
             }).then(d => d.data)).then((r: ResponseModel) => {
                 if (r.status.code === StatusCode.SUCCESS) {
@@ -83,7 +83,7 @@ export class NBCompMobileLogin extends React.Component<NBCompMobileLoginPros, NB
         if (this.state.showRegister) {
             NBGateway.getGateway()
                 .then(c => {
-                    return createAxiosClient('POST').then(a => a({
+                    return createNBNetworkApi('POST').then(a => a({
                         url: `${Constants.BaseDomain}${c.gwUserRegister}`,
                         params: this.state.registerParams
                     })).then(vv => {
@@ -126,7 +126,7 @@ export class NBCompMobileLogin extends React.Component<NBCompMobileLoginPros, NB
         nbLog('用户登录模块', `${this.state.bySms ? '验证码登录 登录参数' : '密码登录 登录参数'}`, params)
         NBGateway.getGateway()
             .then(v => {
-                return createAxiosClient('POST').then(a => a({
+                return createNBNetworkApi('POST').then(a => a({
                     url: `${Constants.BaseDomain}${this.state.bySms ? v.gwUserLogin : '/common/login/password'}`,
                     params
                 })).then(vv => {
@@ -169,12 +169,13 @@ export class NBCompMobileLogin extends React.Component<NBCompMobileLoginPros, NB
     render() {
         const loginBtnColor = this.props.loginBtnColor === undefined ? 'rgba(251, 109, 58, 1)' : this.props.loginBtnColor;
         let comp = null;
+        const inputStyle = Platform.OS === 'android' ? { flex: 1, height: 43, lineHeight: 41, margin: 0, padding: 0 } : { flex: 1, margin: 0, padding: 0 };
         if (this.state.showRegister) {
             comp = <View style={{ width: 312, padding: 27, backgroundColor: 'white', borderRadius: 10 }}>
                 <Text style={{ fontSize: 24, marginBottom: 20 }}>注册</Text>
                 <View style={styles.inputViewStyle}>
                     <NBIconUser style={{ marginLeft: 9, marginTop: 9 }} />
-                    <Input style={{ flex: 1, height: 43, lineHeight: 41, margin: 0, padding: 0 }} key="nick_name_input" keyboardType="default" placeholder="请输入您的真实姓名" onChangeText={(userName) => {
+                    <Input style={inputStyle} key="nick_name_input" keyboardType="default" placeholder="请输入您的真实姓名" onChangeText={(userName) => {
                         this.setState({
                             registerParams: {
                                 ...this.state.registerParams,
@@ -185,7 +186,7 @@ export class NBCompMobileLogin extends React.Component<NBCompMobileLoginPros, NB
                 </View>
                 <View style={[styles.inputViewStyle, { marginTop: 20 }]}>
                     <NBIconPhone style={{ marginLeft: 9, marginTop: 9 }} />
-                    <Input style={{ flex: 1, height: 43, lineHeight: 41, margin: 0, padding: 0 }} key="reg_phone_input" keyboardType="numeric" value={this.state.registerParams.userPhone} placeholder="请输入手机号码" onChangeText={(phone) => {
+                    <Input style={inputStyle} key="reg_phone_input" keyboardType="numeric" value={this.state.registerParams.userPhone} placeholder="请输入手机号码" onChangeText={(phone) => {
                         this.setState({
                             registerParams: {
                                 ...this.state.registerParams,
@@ -196,7 +197,7 @@ export class NBCompMobileLogin extends React.Component<NBCompMobileLoginPros, NB
                 </View>
                 <View style={[styles.inputViewStyle, { marginTop: 20 }]}>
                     <NBIconSafeCode style={{ marginLeft: 9, marginTop: 9 }} />
-                    <Input style={{ flex: 1, height: 43, lineHeight: 41, margin: 0, padding: 0 }} key="reg_code_input" keyboardType="numeric" placeholder="请输入验证码" onChangeText={(code) => {
+                    <Input style={inputStyle} key="reg_code_input" keyboardType="numeric" placeholder="请输入验证码" onChangeText={(code) => {
                         this.setState({
                             registerParams: {
                                 ...this.state.registerParams,
@@ -218,7 +219,7 @@ export class NBCompMobileLogin extends React.Component<NBCompMobileLoginPros, NB
                 </View>
                 <View style={[styles.inputViewStyle, { marginTop: 20, marginBottom: 20 }]}>
                     <NBIconLock style={{ marginLeft: 9, marginTop: 9 }} />
-                    <Input style={{ flex: 1, height: 43, lineHeight: 41, margin: 0, padding: 0 }} secureTextEntry placeholder="请设置您的密码" onChangeText={(password) => {
+                    <Input style={inputStyle} secureTextEntry placeholder="请设置您的密码" onChangeText={(password) => {
                         this.setState({
                             registerParams: {
                                 ...this.state.registerParams,
@@ -240,7 +241,7 @@ export class NBCompMobileLogin extends React.Component<NBCompMobileLoginPros, NB
                 <Text style={{ fontSize: 24 }}>登录</Text>
                 <View style={[styles.inputViewStyle, { marginTop: 20 }]}>
                     <NBIconPhone style={{ marginLeft: 9, marginTop: 9 }} />
-                    <Input style={{ flex: 1, height: 43, lineHeight: 41, margin: 0, padding: 0 }} key="phone_input" keyboardType="numeric" value={this.state.loginParams.phone} placeholder="请输入手机号码" onChangeText={(phone) => {
+                    <Input style={inputStyle} key="phone_input" keyboardType="numeric" value={this.state.loginParams.phone} placeholder="请输入手机号码" onChangeText={(phone) => {
                         this.setState({
                             loginParams: {
                                 ...this.state.loginParams,
@@ -252,7 +253,7 @@ export class NBCompMobileLogin extends React.Component<NBCompMobileLoginPros, NB
                 {
                     this.state.bySms ? <View style={[styles.inputViewStyle, { marginTop: 20 }]}>
                         <NBIconSafeCode style={{ marginLeft: 9, marginTop: 9 }} />
-                        <Input style={{ flex: 1, height: 43, lineHeight: 41, margin: 0, padding: 0 }} key="login_code_input" keyboardType="numeric" placeholder="请输入验证码" onChangeText={(code) => {
+                        <Input style={inputStyle} key="login_code_input" keyboardType="numeric" placeholder="请输入验证码" onChangeText={(code) => {
                             this.setState({
                                 loginParams: {
                                     ...this.state.loginParams,
@@ -273,7 +274,7 @@ export class NBCompMobileLogin extends React.Component<NBCompMobileLoginPros, NB
                         </View>
                     </View> : <View style={[styles.inputViewStyle, { marginTop: 20 }]}>
                             <NBIconLock style={{ marginLeft: 9, marginTop: 9 }} />
-                            <Input style={{ flex: 1, height: 43, lineHeight: 41, margin: 0, padding: 0 }} secureTextEntry onChangeText={(password) => {
+                            <Input style={inputStyle} secureTextEntry onChangeText={(password) => {
                                 this.setState({
                                     loginParams: {
                                         ...this.state.loginParams,

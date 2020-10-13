@@ -84,7 +84,7 @@ export class NBCompInstantUserList extends React.PureComponent<NBCompInstantUser
             userId: msg.fromId,
             userName: msg.userName,
             content: msg.msg.content,
-            contentType: msg.msg.mstType,
+            contentType: msg.msg.msgType,
             createTime: msg.pubtime
         });
 

@@ -45,7 +45,7 @@ export const setNBUserAll = (user: NBUserAll): Promise<boolean> => {
     return AsyncStorage.multiSet([[userKey, JSON.stringify(user.user)], [tokenKey, user.token || '']]).then(() => true)
 }
 
-export const getLastNBUserALL = (): Promise<NBUserAll | null> => {
+export const getLastNBUserALL = (notConfirm?: boolean): Promise<NBUserAll | null> => {
     return getLastNBUserInfo().then(u => {
         if (u) {
             return getLastUserToken().then(token => {
@@ -65,6 +65,9 @@ export const getLastNBUserALL = (): Promise<NBUserAll | null> => {
         }
         return null;
     }).then(u => {
+        if (notConfirm !== undefined && notConfirm) {
+            return u;
+        }
         if (u !== null && u.token) {
             return callApi<NBUserModel>('/api/user/info/detail').then(uu => {
                 if (uu) {

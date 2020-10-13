@@ -17,3 +17,4 @@ export * from "./ec";
 export * from "./NBCompPullView";
 export * from "./NBCompFlatList";
 export * from "./NBCompStar";
+export * from "./NBCompDatePicker";

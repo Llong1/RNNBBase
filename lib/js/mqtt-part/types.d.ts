@@ -23,7 +23,7 @@ export declare type InstantMessageEvent = 'OnInstantLoginSuccess' | 'OnInstantRe
 export declare type InstantMessageType = 'text' | 'assets' | 'html';
 export declare type IgnoreInstatnMessage = 'ping heart' | 'response heart';
 export interface InstantMessageEntity {
-    mstType?: InstantMessageType;
+    msgType?: InstantMessageType;
     content?: string;
 }
 export interface InstantMessage {

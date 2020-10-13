@@ -30,7 +30,7 @@ export type InstantMessageType = 'text' | 'assets' | 'html';
 export type IgnoreInstatnMessage = 'ping heart' | 'response heart';
 
 export interface InstantMessageEntity {
-    mstType?: InstantMessageType,
+    msgType?: InstantMessageType,
     content?: string
 }
 

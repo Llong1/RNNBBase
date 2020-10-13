@@ -10,7 +10,7 @@ declare class NBUserMemCache {
 }
 export declare const nbUserMemCache: NBUserMemCache;
 export declare const setNBUserAll: (user: NBUserAll) => Promise<boolean>;
-export declare const getLastNBUserALL: () => Promise<NBUserAll>;
+export declare const getLastNBUserALL: (notConfirm?: boolean) => Promise<NBUserAll>;
 export declare const getNBUserInfo: (id: import("react").ReactText, url?: string) => Promise<NBUserModel>;
 export declare const getLastNBUserInfo: () => Promise<NBUserModel>;
 export declare const saveLastNBUserInfo: (user?: NBUserModel) => Promise<boolean>;

@@ -32,7 +32,7 @@ export const adapterNBCommunicationListModel = (sourceModel: CommunicationListMo
         nbLog('即时通讯库', '转换通讯录记录model', md.content, content.msg.content);
         md.userName = md.userName || content.userName;
         md.createTime = content.pubtime || md.createTime;
-        md.contentType = content.msg.mstType;
+        md.contentType = content.msg.msgType;
         md.content = content.msg.content;
     }
     return md;
@@ -45,7 +45,7 @@ export const adapterNBCommunicationHistoryModel = (sourceModel: CommunicationHis
         nbLog('即时通讯库', '转换通讯录记录model', md.content, content.msg.content);
         md.userName = md.userName || content.userName;
         md.createTime = content.pubtime || md.createTime;
-        md.contentType = content.msg.mstType;
+        md.contentType = content.msg.msgType;
         md.content = content.msg.content;
     }
     return md;

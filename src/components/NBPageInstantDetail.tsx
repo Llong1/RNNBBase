@@ -77,7 +77,7 @@ export default class NBPageInstantDetail extends BaseAppPage<NBPageInstantDetail
                         toId: v.toUserId,
                         fromId: v.userId,
                         msg: {
-                            mstType: v.contentType,
+                            msgType: v.contentType,
                             content: v.content
                         },
                         userName: v.userName,
@@ -176,7 +176,7 @@ export default class NBPageInstantDetail extends BaseAppPage<NBPageInstantDetail
                                         toId: instantUser.userId,
                                         msg: {
                                             content: this.state.msg,
-                                            mstType: 'text'
+                                            msgType: 'text'
                                         },
                                         userName: currentUser.userName,
                                         pubtime: moment().format('YYYY-MM-DD HH:mm:ss')
