@@ -1,6 +1,6 @@
 {
   "name": "react-native-nbbase",
-  "version": "1.4.16",
+  "version": "1.4.16-CMP3",
   "description": "react-native app开发全家桶",
   "main": "lib/js/index.js",
   "types": "lib/js/index.d.ts",

@@ -3,13 +3,13 @@ import { Container, Content, Footer, Header, Input, Text, View } from "native-ba
 import React from "react";
 import { Dimensions, Platform, ScrollView, TouchableOpacity, EmitterSubscription } from "react-native";
 import { SvgXml } from "react-native-svg";
-import { CommunicationHistoryListModel, CommunicationListModel, getNBInstantMsgList, InstantMessage, InstantMqttClient } from "../mqtt-part";
-import { NBIconArrowLeft } from "../styles";
-import { nbUserMemCache, NBUserModel } from "../user";
-import { isEmptyObj, nbLog, showError } from "../util";
-import NBUserLogo from "./NBUserLogo";
-import { BaseAppPage, BaseAppPagePros, NBPages } from "./types";
-import NBCompApp from "./NBCompApp";
+import { CommunicationHistoryListModel, CommunicationListModel, getNBInstantMsgList, InstantMessage, InstantMqttClient } from "../../mqtt-part";
+import { NBIconArrowLeft } from "../../styles";
+import { nbUserMemCache, NBUserModel } from "../../user";
+import { isEmptyObj, nbLog, showError } from "../../util";
+import NBUserLogo from "../NBUserLogo";
+import { BaseAppPage, BaseAppPagePros, NBPages } from "../types";
+import NBCompApp from "../NBCompApp";
 
 const Screens = Dimensions.get('window');
 
@@ -67,7 +67,7 @@ export default class NBPageInstantDetail extends BaseAppPage<NBPageInstantDetail
     _msgEmitter?: EmitterSubscription;
 
     componentDidMount() {
-        const instantClient: InstantMqttClient = this.props.route.params.instantClient;
+        const instantClient: InstantMqttClient = this.props.route.params.instantClient || NBCompApp.instantConfig.instantClient;
         const { instantUser } = this.props.route.params;
         instantClient.focusUserID = instantUser.userId;
         getNBInstantMsgList(instantUser.userId).then((v: Array<CommunicationHistoryListModel> | null) => {
@@ -145,10 +145,14 @@ export default class NBPageInstantDetail extends BaseAppPage<NBPageInstantDetail
                     </View>
                 </View>
             </Header>
-            <Content style={{ flex: 1 }}>
+            <Content style={{ flex: 1 }} scrollEnabled={false}>
                 <ScrollView ref={o => this._scrollView = this._scrollView || o} showsVerticalScrollIndicator={false} style={{ height: Screens.height - 112 }}>
                     {
                         this.state.msgList.map((item: InstantMessage, index: number) => {
+                            let comp = NBCompApp.instantConfig.msgDetailRender ? NBCompApp.instantConfig.msgDetailRender(item, index) : null;
+                            if (comp) {
+                                return comp;
+                            }
                             return <IMDetail key={`${index}`} detail={item} isSelf={currentUser === undefined ? false : currentUser.id === item.fromId} isLast={index >= this.state.msgList.length - 1} />
                         })
                     }

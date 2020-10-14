@@ -5,8 +5,8 @@ import React from "react";
 import Constants from "../Constants";
 import { NBConfig } from "../models";
 import { getLastNBUserALL, setNBUserAll } from "../user";
-import NBPageInstantDetail from "./NBPageInstantDetail";
-import { NBPages } from "./types";
+import { NBPageInstantDetail } from "./instants";
+import { NBPages, NBCompAppThemeConfig } from "./types";
 import NBCompApp from "./NBCompApp";
 
 export interface NBCompBaseAppRootAppRouter {
@@ -18,15 +18,24 @@ export interface NBCompBaseAppRootPros {
     theme?: any,
     routes?: Array<NBCompBaseAppRootAppRouter>,
     useInstantsLibs?: boolean,
-    nbConfig?: NBConfig
+    nbConfig?: NBConfig,
+    themeConfig?: NBCompAppThemeConfig
 }
 
 const Stack = createStackNavigator();
 
 export class NBCompBaseAppRoot extends React.Component<NBCompBaseAppRootPros, { isLoaded?: boolean }> {
-    state = { isLoaded: false };
-    componentDidMount() {
 
+    constructor(props: NBCompBaseAppRootPros) {
+        super(props);
+        this.state = { isLoaded: false };
+
+        if (props.themeConfig) {
+            NBCompApp.themeConfig = Object.assign({}, Object.assign(NBCompApp.themeConfig, props.themeConfig));
+        }
+    }
+
+    componentDidMount() {
         this.setState({ isLoaded: false });
         const nbConfig: NBConfig = this.props.nbConfig;
         Promise.resolve(nbConfig ? nbConfig : Constants.readLocalConf()).then(conf => {
@@ -40,6 +49,7 @@ export class NBCompBaseAppRoot extends React.Component<NBCompBaseAppRootPros, { 
             this.setState({ isLoaded: true });
         })
     }
+
     render() {
         if (!this.state.isLoaded) {
             return <View />

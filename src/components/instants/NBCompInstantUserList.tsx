@@ -1,12 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
 import { Text, View } from "native-base";
 import React from "react";
-import { ViewProps, EmitterSubscription } from "react-native";
-import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
-import { CommunicationListModel, getNBInstantUserList, InstantMessage, InstantMqttClient } from "../mqtt-part";
-import NBUserLogo from "./NBUserLogo";
-import { NBCompState } from "./types";
-import { nbLog } from "../util";
+import { EmitterSubscription, FlatList, ViewProps } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { CommunicationListModel, getNBInstantUserList, InstantMessage, InstantMqttClient } from "../../mqtt-part";
+import { nbLog } from "../../util";
+import NBUserLogo from "../NBUserLogo";
+import { NBCompState } from "../types";
+import NBCompApp from "../NBCompApp";
 
 export type NBCompInstantItemPress = (item: CommunicationListModel) => void;
 
@@ -43,12 +44,24 @@ const NBCompInstantItem = (props: {
     </TouchableOpacity>
 }
 
+const _ItemWrapper = (props: { item: CommunicationListModel, instantClient?: InstantMqttClient, themeColor?: string, comp?: any }) => {
+    const navi = useNavigation();
+    return <TouchableOpacity onPress={() => {
+        navi.navigate('nbInstantDetail', {
+            instantUser: props.item,
+            themeColor: props.themeColor,
+            instantClient: props.instantClient
+        });
+    }}>
+        {props.comp}
+    </TouchableOpacity>
+}
+
 export interface NBCompInstantUserListProps extends ViewProps {
     instant?: InstantMqttClient,
-    isFlatList?: boolean,
     onItemPress?: NBCompInstantItemPress,
-    navigation?: any,
-    themeColor?: string
+    themeColor?: string,
+    renderItem?: (item: CommunicationListModel, index: number) => React.ReactElement | null
 }
 
 export interface NBCompInstantUserListState extends NBCompState {
@@ -56,9 +69,16 @@ export interface NBCompInstantUserListState extends NBCompState {
 }
 
 export class NBCompInstantUserList extends React.PureComponent<NBCompInstantUserListProps, NBCompInstantUserListState> {
-    state = {
-        userList: []
+
+    constructor(props: NBCompInstantUserListProps) {
+        super(props);
+        this.state = {
+            userList: []
+        };
+
+        NBCompApp.configInstant(props.instant);
     }
+
     _msgEmitter?: EmitterSubscription;
     componentDidMount() {
         const { instant } = this.props;
@@ -98,13 +118,13 @@ export class NBCompInstantUserList extends React.PureComponent<NBCompInstantUser
     }
 
     render() {
-        const { isFlatList, onItemPress, themeColor, instant } = this.props;
-        return isFlatList !== undefined && isFlatList ? <FlatList data={this.state.userList} renderItem={(i: { item: CommunicationListModel, index: number }) => {
-            return <NBCompInstantItem item={i.item} instantClient={instant} isLast={i.index === this.state.userList.length - 1} themeColor={themeColor} onPres={onItemPress} />
-        }} /> : <View>
-                {
-                    this.state.userList.map((v: CommunicationListModel, index: number) => <NBCompInstantItem item={v} instantClient={instant} isLast={index === this.state.userList.length - 1} themeColor={themeColor} onPres={onItemPress} />)
-                }
-            </View>
+        const { onItemPress, themeColor, instant, renderItem } = this.props;
+        return <FlatList style={[{ flex: 1 }, this.props.style]} data={this.state.userList} renderItem={(info: { item: CommunicationListModel, index: number }) => {
+            let comp = renderItem(info.item, info.index);
+            if (!comp) {
+                return <NBCompInstantItem item={info.item} instantClient={instant} isLast={info.index === this.state.userList.length - 1} themeColor={themeColor} onPres={onItemPress} />
+            }
+            return <_ItemWrapper item={info.item} instantClient={instant} themeColor={themeColor} comp={comp} />;
+        }} />
     }
 }

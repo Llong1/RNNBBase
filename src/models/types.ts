@@ -16,7 +16,7 @@ export interface NBRegisterModel {
     userName?: string,
 }
 
-export interface NBConfig {
+export interface NBConfig extends AppConfig {
     baseDomain?: string,
     isDebug?: boolean,
     payWxId?: any,
@@ -37,5 +37,13 @@ export interface NBUploadResponse {
     key?: string,
     hash?: string,
     fileType?: string
+}
+
+/**
+ * 应用配置
+ */
+export interface AppConfig {
+    appid?: string,
+    appsecr?: string
 }
 

@@ -1,12 +1,12 @@
 import React from "react";
 import { ViewProps } from "react-native";
-import { InstantMqttClient } from "../mqtt-part";
-import { NBUserID, getNBUserInfo, NBUserModel } from "../user";
-import { isEmptyObj, showError } from "../util";
-import { NBIconMessageX } from "../styles";
-import NBBaseCxt from "../NBBaseCxt";
-import NBCompApp from "./NBCompApp";
-import { NBPages } from "./types";
+import { InstantMqttClient } from "../../mqtt-part";
+import { NBUserID, getNBUserInfo, NBUserModel } from "../../user";
+import { isEmptyObj, showError } from "../../util";
+import { NBIconMessageX } from "../../styles";
+import NBBaseCxt from "../../NBBaseCxt";
+import NBCompApp from "../NBCompApp";
+import { NBPages } from "../types";
 
 export interface NBCompInstantQuickChatProps extends ViewProps {
     id: NBUserID,

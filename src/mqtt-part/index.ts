@@ -1,20 +1,19 @@
-import Axios from "axios";
-import { EventEmitter } from 'events';
-import { EmitterSubscription, NativeEventEmitter, DeviceEventEmitter, NativeModules, Platform } from "react-native";
-import Constants from "../Constants";
-import { isEmptyObj, randomInt, showError, nbLog, isJsonString } from "../util";
-import { InstantOptions, InstantMessage, InstantMessageEntity, InstantMessageEvent, MqttClientOptions, MqttConnectionOptions, MqttMessage } from "./types";
-import { NBUserID, nbUserMemCache } from "../user";
-import { NBGateway, ResponseModel, StatusCode } from "../api";
-import { createAxiosClient, nbFilterResponse } from "../network";
-import NBCompApp from "../components/NBCompApp";
-import { NBPages } from "../components/types";
 import moment from "moment";
 import { Toast } from "native-base";
+import { DeviceEventEmitter, EmitterSubscription, NativeEventEmitter, NativeModules, Platform } from "react-native";
+import { NBGateway } from "../api";
+import NBCompApp from "../components/NBCompApp";
+import { NBPages } from "../components/types";
+import Constants from "../Constants";
 import NBBaseCtx from "../NBBaseCxt";
+import { createAxiosClient, nbFilterResponse } from "../network";
+import { NBUserID, nbUserMemCache } from "../user";
+import { isJsonString, nbLog, randomInt } from "../util";
+import { InstantMessage, InstantMessageEntity, InstantMessageEvent, InstantOptions, MqttClientOptions, MqttConnectionOptions, MqttMessage } from "./types";
 
-export * from "./types";
 export * from "./InstantsApis";
+export * from "./types";
+export * from "./tools";
 
 const { NBBaseMQTTModule } = NativeModules;
 const eventEmitter = new NativeEventEmitter(NBBaseMQTTModule);
@@ -78,17 +77,18 @@ export class InstantMqttClient {
     private mqttClient?: MqttClient;
     private userId?: any;
     private isLogin?: boolean;
-    private messageEmitter: EventEmitter;
+    // private messageEmitter: EventEmitter;
     private instantOptions?: InstantOptions;
     private clientSub?: EmitterSubscription;
     public focusUserID?: NBUserID;
     constructor(options: MqttClientOptions, instantOptions?: InstantOptions, prefix?: string) {
         this.mqttClient = new MqttClient(options);
         this.prefix = prefix === undefined ? '' : prefix;
-        this.messageEmitter = new EventEmitter();
+        // this.messageEmitter = new EventEmitter();
         this.instantOptions = instantOptions;
 
-        NBBaseCtx.defaultInstantClient = NBBaseCtx.defaultInstantClient || this;
+        // NBBaseCtx.defaultInstantClient = NBBaseCtx.defaultInstantClient || this;
+        NBCompApp.configInstant(this);
     }
 
     public setHttpOptions(op: InstantOptions) {

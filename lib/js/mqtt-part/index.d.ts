@@ -1,8 +1,9 @@
 import { EmitterSubscription } from "react-native";
-import { InstantOptions, InstantMessage, InstantMessageEntity, InstantMessageEvent, MqttClientOptions, MqttConnectionOptions, MqttMessage } from "./types";
 import { NBUserID } from "../user";
-export * from "./types";
+import { InstantMessage, InstantMessageEntity, InstantMessageEvent, InstantOptions, MqttClientOptions, MqttConnectionOptions, MqttMessage } from "./types";
 export * from "./InstantsApis";
+export * from "./types";
+export * from "./tools";
 export declare class MqttClient {
     private options;
     constructor(options: MqttClientOptions);
@@ -21,7 +22,6 @@ export declare class InstantMqttClient {
     private mqttClient?;
     private userId?;
     private isLogin?;
-    private messageEmitter;
     private instantOptions?;
     private clientSub?;
     focusUserID?: NBUserID;

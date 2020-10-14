@@ -181,3 +181,7 @@ export interface NBCompState {
 export const NBPages = {
     InstantPage: 'nbInstantDetail'
 }
+
+export interface NBCompAppThemeConfig {
+    primaryColor?: string;
+}

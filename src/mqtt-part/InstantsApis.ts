@@ -5,14 +5,14 @@ import { NBUserID } from "../user";
 import { CommunicationListModel, CommunicationHistoryListModel, InstantMessage } from "./types";
 import { nbLog } from "../util";
 
-export const getNBInstantUserList = (): Promise<Array<CommunicationListModel> | null> => {
+export const getNBInstantUserList = (pageNo?: number, pageSize?: number): Promise<Array<CommunicationListModel> | null> => {
     return NBGateway.getGateway().then(v => {
-        nbLog('即时通讯库', 'API 获取通讯列表', `${Constants.BaseDomain}${v.gwInstantUserList}`);
+        nbLog('即时通讯库', 'API 获取通讯列表', `${Constants.BaseDomain}${v.gwInstantUserList}?pageSize=${pageSize === undefined ? 10 : pageSize}&pageNumber=${pageNo === undefined ? 1 : pageNo}`);
         return createAxiosClient('GET').then(a => a({
             url: `${Constants.BaseDomain}${v.gwInstantUserList}`,
         }))
     }).then(nbFilterResponse)
-        .then((r: ResponseModel) => r.result ? r.result.map((c: CommunicationListModel) => adapterNBCommunicationListModel(c)) : []);
+        .then((r: ResponseModel) => r.result && r.result.data ? r.result.data.map((c: CommunicationListModel) => adapterNBCommunicationListModel(c)) : []);
 }
 
 export const getNBInstantMsgList = (id: NBUserID, pageNo?: number, pageSize?: number): Promise<Array<CommunicationHistoryListModel> | null> => {

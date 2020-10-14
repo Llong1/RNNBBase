@@ -1,4 +1,4 @@
-import { DataModel } from "../models";
+import { DataModel, AppConfig } from "../models";
 import { ReactText } from "react";
 import { NBUserID } from "../user";
 export interface MqttClientOptions {
@@ -55,4 +55,27 @@ export interface CommunicationHistoryListModel extends DataModel {
     content: string;
     contentType: InstantMessageType;
     createTime: string;
+}
+/**
+ * 即时通讯 api配置
+ */
+export interface InstantsApiConfig {
+    /**
+     * 消息列表查询api
+     */
+    communicationListApi?: string;
+    /**
+     * 通讯录列表查询api
+     */
+    contactListApi?: string;
+    /**
+     * 历史记录查询api
+     */
+    historyListApi?: string;
+}
+/**
+ * 即时通讯配置
+ */
+export interface InstantsConfig extends AppConfig {
+    apiConfig?: InstantsApiConfig;
 }
